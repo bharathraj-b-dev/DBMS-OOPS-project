@@ -1,84 +1,79 @@
 CINEBOOK - JAVA OOP + MYSQL DBMS PROJECT
 ========================================
 
-WHAT THIS PROJECT USES
-- Java classes and objects
-- Encapsulation
-- Interface
-- Enum with ticket prices
-- 2D array for the seat map
-- ArrayList
-- Method overloading
-- Static booking ID counter
-- MySQL tables, primary keys, foreign keys, SELECT, INSERT and UPDATE
-- JDBC to connect Java to MySQL
+This project is a terminal-based movie booking system built with Java 17, JDBC and MySQL.
+It includes customer booking features, administrator controls, and MySQL-backed reports.
+
+FEATURES
+- Customer menu with movie browsing, show timings and seat availability
+- Booking multiple seats with validation and transaction safety
+- Coupon code support (CINE10 gives a 10% discount)
+- Booking cancellation with 80% refund
+- Booking history and revenue reporting
+- Administrator menu for movies, show timings and reports
+- MySQL database tables with foreign keys and integrity checks
 
 REQUIREMENTS
 1. JDK 17 or newer
-2. MySQL Server
-3. MySQL Connector/J JAR
+2. MySQL Server running locally on port 3306
+3. MySQL Connector/J JAR downloaded and placed in the project folder
 4. Terminal / Command Prompt
 
 STEP 1: CREATE THE DATABASE
-1. Open MySQL Workbench.
-2. Open schema.sql.
-3. Execute the entire script.
-   It creates the cinebook database, tables, three shows and 120 seats.
+1. Open MySQL Workbench or the MySQL shell.
+2. Open schema.sql and run it.
+3. The script creates the cinebook database, movie, show, seat, booking and booking_seat tables.
 
-STEP 2: SET YOUR MYSQL PASSWORD
-Open DBConnection.java.
-Replace:
-    YOUR_MYSQL_PASSWORD
-with the password for your MySQL root account.
-If your MySQL account has no password, use an empty string: "".
+UPGRADING AN EXISTING DATABASE
+If you ran the updated schema.sql over the original CineBook database, the old booking table
+is not changed by CREATE TABLE IF NOT EXISTS. Before starting the updated app:
+1. Make a backup of the cinebook database in MySQL Workbench.
+2. Run migrate_existing.sql once. It preserves the original booking tables as
+   booking_before_migration and booking_seat_before_migration, then copies the booking
+   records into the updated tables.
+3. Do not run migrate_existing.sql again; it is a one-time migration.
 
-STEP 3: GET MYSQL CONNECTOR/J
-Download MySQL Connector/J from the official MySQL website:
-https://dev.mysql.com/downloads/connector/j/
-Choose the platform-independent ZIP, extract it, and find the file named
-mysql-connector-j-...jar.
+For a fresh database, run schema.sql only. Do not drop an existing database to upgrade it.
 
-STEP 4: COMPILE AND RUN (WINDOWS)
+STEP 2: CONFIGURE DATABASE LOGIN
+Open DBConnection.java and update the username/password if needed.
+The default values are:
+- user: root
+- password: 2504
+
+If your MySQL setup uses a different password, change it in DBConnection.java.
+
+STEP 3: COMPILE (WINDOWS)
 Put all .java files and the connector JAR in the same folder.
-Open Command Prompt in that folder.
+Open Command Prompt in that folder and run:
 
-Compile:
-    javac -cp ".;mysql-connector-j-9.x.x.jar" *.java
+javac -cp ".;mysql-connector-j-26.7.0.jar" *.java
 
-Replace mysql-connector-j-9.x.x.jar with the exact JAR filename you downloaded.
+STEP 4: RUN
+java -cp ".;mysql-connector-j-26.7.0.jar" CineApp
 
-Run:
-    java -cp ".;mysql-connector-j-9.x.x.jar" CineApp
+ADMIN PASSWORD
+The administrator menu uses this password:
+admin123
 
-Use the same exact JAR filename in both commands.
+USER FLOW
+1. Launch the app.
+2. Choose Customer.
+3. View movies or show timings.
+4. View seat availability for a selected show.
+5. Book one or more seats.
+6. Enter a coupon code if you want to use CINE10.
+7. Cancel a booking from the customer menu using the show ID and booking ID.
 
-If using macOS/Linux, replace the semicolon in the classpath with a colon.
+SEAT PRICING
+Rows A-B: Regular - Rs. 150
+Rows C-D: Premium - Rs. 250
+Row E: VIP - Rs. 400
 
-STEP 5: TRY THE APP
-1. Choose 1 to view shows and book tickets.
-2. Select show ID 1, 2 or 3.
-3. Choose seats like C3,C4.
-4. Enter CINE10 for a 10% discount, or press Enter to skip.
-5. Note the booking ID.
-6. Choose 2 to cancel. Enter the show ID and booking ID.
-7. Choose 3 to view booking records.
-8. Choose 4 to exit.
-
-SEAT PRICES
-Rows A-B: Regular, Rs. 150 each
-Rows C-D: Premium, Rs. 250 each
-Row E: VIP, Rs. 400 each
-
-NOTES
-- A booking is all-or-nothing: all seats are checked before any seat is updated.
-- Booking records remain in MySQL after the Java program closes.
-- Cancelling a booking marks it CANCELLED and makes its seats available again.
-- The refund is 80% of the amount stored for the booking.
-- The app is console-based; it has no GUI.
-- This is a sample college project, not a production payment system.
-
-TROUBLESHOOTING
-- "Access denied": check username/password in DBConnection.java.
-- "Unknown database cinebook": run schema.sql in MySQL Workbench.
-- "No suitable driver": check the Connector/J JAR is in the classpath and filename is correct.
-- "Communications link failure": make sure MySQL Server is running.
+IMPORTANT NOTES
+- Seat validation happens before any seat is updated.
+- Each booking is processed in a single MySQL transaction.
+- Booking IDs are generated by the database.
+- Each newly added show is created with all 40 seats in the same transaction.
+- Cancelled bookings are excluded from current revenue calculations.
+- The application is console-based and does not use a GUI or web framework.

@@ -1,23 +1,25 @@
 import java.util.List;
 
 public class Booking {
-    private static int nextBookingId = 1001;
-
     private final int bookingId;
     private final int showId;
     private final String movieName;
+    private final String showDate;
     private final String showTime;
     private final List<String> seatCodes;
-    private final double amount;
+    private final double totalAmount;
+    private final String status;
 
-    public Booking(int showId, String movieName, String showTime,
-                   List<String> seatCodes, double amount) {
-        this.bookingId = nextBookingId++;
+    public Booking(int bookingId, int showId, String movieName, String showDate,
+                   String showTime, List<String> seatCodes, double totalAmount, String status) {
+        this.bookingId = bookingId;
         this.showId = showId;
         this.movieName = movieName;
+        this.showDate = showDate;
         this.showTime = showTime;
         this.seatCodes = seatCodes;
-        this.amount = amount;
+        this.totalAmount = totalAmount;
+        this.status = status;
     }
 
     public int getBookingId() {
@@ -32,6 +34,10 @@ public class Booking {
         return movieName;
     }
 
+    public String getShowDate() {
+        return showDate;
+    }
+
     public String getShowTime() {
         return showTime;
     }
@@ -40,7 +46,15 @@ public class Booking {
         return seatCodes;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
     public double getAmount() {
-        return amount;
+        return totalAmount;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
