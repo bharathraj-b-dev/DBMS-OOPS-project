@@ -25,29 +25,30 @@ STEP 1: CREATE THE DATABASE
 3. The script creates the cinebook database, movie, show, seat, booking and booking_seat tables.
 
 UPGRADING AN EXISTING DATABASE
-If you ran the updated schema.sql over the original CineBook database, the old booking table
-is not changed by CREATE TABLE IF NOT EXISTS. Before starting the updated app:
+If you are upgrading the original CineBook database, the old booking table is not changed by
+CREATE TABLE IF NOT EXISTS. Before starting the updated app:
 1. Make a backup of the cinebook database in MySQL Workbench.
-2. Run migrate_existing.sql once. It preserves the original booking tables as
-   booking_before_migration and booking_seat_before_migration, then copies the booking
-   records into the updated tables.
-3. Do not run migrate_existing.sql again; it is a one-time migration.
+2. Run the normal schema.sql setup first.
+3. In the OPTIONAL LEGACY MIGRATION section at the end of schema.sql, uncomment and run
+   each migration statement once. It retains the old tables as booking_before_migration
+   and booking_seat_before_migration, and copies their booking data to the new tables.
+4. Do not run the migration section again; it is a one-time migration.
 
 For a fresh database, run schema.sql only. Do not drop an existing database to upgrade it.
 
 STEP 2: CONFIGURE DATABASE LOGIN
-Open DBConnection.java and update the username/password if needed.
+Open CineApp.java and update the database login values in the DBConnection class if needed.
 The default values are:
 - user: root
 - password: 2504
 
-If your MySQL setup uses a different password, change it in DBConnection.java.
+If your MySQL setup uses a different password, change it in CineApp.java.
 
 STEP 3: COMPILE (WINDOWS)
-Put all .java files and the connector JAR in the same folder.
+Put CineApp.java and the connector JAR in the same folder.
 Open Command Prompt in that folder and run:
 
-javac -cp ".;mysql-connector-j-26.7.0.jar" *.java
+javac -cp ".;mysql-connector-j-26.7.0.jar" CineApp.java
 
 STEP 4: RUN
 java -cp ".;mysql-connector-j-26.7.0.jar" CineApp
