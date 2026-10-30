@@ -1,1 +1,2 @@
+javac -cp ".;mysql-connector-j-26.7.0.jar" CineApp.java
 java -cp ".;mysql-connector-j-26.7.0.jar" CineApp
